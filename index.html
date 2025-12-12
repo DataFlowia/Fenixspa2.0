@@ -10,22 +10,15 @@
     
     <!-- Chosen Palette: Neutrals (Slate) with Deep Blue (#1E40AF) and Emerald Green (#059669) Accents. Dark mode support included. -->
     <!-- Application Structure Plan: 
-         1. Hero Section: Personalization Engine (AI Simulation) - Users segment themselves to customize the CTA.
-         2. Stats Dashboard: Quantitative proof of 30+ years experience using Chart.js.
-         3. Services Hub: Tabbed interface with CSS 3D interactive elements to represent "modernity" and "structure".
-         4. Timeline: Scroll-triggered history visualization.
-         5. Real Estate/Admin: Specialized section with a Canvas-based 3D wireframe simulation (Mock AR).
-         6. Contact/Footer: AI-assisted layout.
-         Structure chosen to guide user from "Trust" (Hero/Stats) to "Solution" (Services) to "Validation" (History/Real Estate).
+         1. Hero Section
+         2. Stats Dashboard
+         3. Services Hub
+         4. Testimonials
+         5. Projects Gallery (NEW)
+         6. Timeline/About
+         7. Real Estate/Admin
+         8. Contact/Footer
     -->
-    <!-- Visualization & Content Choices:
-         - Growth Chart: Chart.js Line Chart. Goal: Inform about asset growth.
-         - 3D Service Icons: CSS 3D Transforms. Goal: Organize/Engage. No SVG used.
-         - AR Preview: HTML5 Canvas custom drawing (rotating wireframe). Goal: Wow Factor/Impact. No SVG/External 3D libs.
-         - Timeline: Flexbox + JS IntersectionObserver. Goal: Inform/Change.
-    -->
-    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
-
     <script>
         tailwind.config = {
             darkMode: 'class', // Manual toggle with system pref logic
@@ -121,6 +114,25 @@
                 height: 350px;
             }
         }
+        /* Testimonial Quote Style (using unicode) */
+        .quote::before {
+            content: '“';
+            font-size: 4rem;
+            line-height: 1;
+            color: #1E40AF; /* brand-blue */
+            position: absolute;
+            left: 1rem;
+            top: 0.5rem;
+            opacity: 0.2;
+        }
+        .dark .quote::before {
+            color: #60a5fa; /* blue-400 */
+        }
+        /* Project Card Hover Effect */
+        .project-card:hover .project-overlay {
+            opacity: 1;
+            transform: translateY(0);
+        }
     </style>
 </head>
 <body class="bg-brand-light text-slate-800 dark:bg-slate-900 dark:text-slate-100 transition-colors duration-300 font-sans antialiased overflow-x-hidden">
@@ -135,6 +147,8 @@
                 <div class="hidden md:block">
                     <div class="ml-10 flex items-baseline space-x-8">
                         <a href="#services" class="hover:text-brand-blue dark:hover:text-blue-400 px-3 py-2 rounded-md text-sm font-medium transition-colors">Servicios</a>
+                        <a href="#testimonials" class="hover:text-brand-blue dark:hover:text-blue-400 px-3 py-2 rounded-md text-sm font-medium transition-colors">Testimonios</a>
+                        <a href="#projects" class="hover:text-brand-blue dark:hover:text-blue-400 px-3 py-2 rounded-md text-sm font-medium transition-colors">Proyectos</a>
                         <a href="#about" class="hover:text-brand-blue dark:hover:text-blue-400 px-3 py-2 rounded-md text-sm font-medium transition-colors">Quiénes Somos</a>
                         <a href="#real-estate" class="hover:text-brand-blue dark:hover:text-blue-400 px-3 py-2 rounded-md text-sm font-medium transition-colors">Admin. Inmobiliaria</a>
                         <a href="#contact" class="bg-brand-blue text-white hover:bg-blue-700 px-4 py-2 rounded-full text-sm font-medium transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">Contacto</a>
@@ -310,6 +324,164 @@
             </div>
         </div>
     </section>
+
+    <!-- TESTIMONIALS -->
+    <section id="testimonials" class="py-20 bg-white dark:bg-slate-800 transition-colors">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <span class="text-brand-blue font-semibold tracking-wider uppercase text-sm">Validación Externa</span>
+                <h2 class="mt-2 text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white">Lo que Dicen Nuestros Clientes</h2>
+                <p class="mt-4 max-w-2xl mx-auto text-slate-500 dark:text-slate-400">
+                    Nuestra mayor credibilidad proviene de los resultados que entregamos y la confianza de nuestros socios.
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Testimonial 1: Corporate/Finance -->
+                <div class="relative p-8 bg-slate-50 dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-100 dark:border-slate-700 quote hover:shadow-2xl transition-shadow">
+                    <p class="relative z-10 text-slate-600 dark:text-slate-300 italic pt-6 pb-4">
+                        "La reestructuración que gestionó Fenix SpA fue clave para asegurar nuestra continuidad. Su visión de largo plazo y manejo de crisis no tiene comparación. Aumentamos nuestra liquidez en un 40%."
+                    </p>
+                    <div class="flex items-center mt-4">
+                        <div class="w-10 h-10 bg-brand-blue rounded-full flex items-center justify-center text-white font-bold text-lg mr-3">D</div>
+                        <div>
+                            <p class="font-bold text-slate-900 dark:text-white">Daniela Soto</p>
+                            <p class="text-sm text-slate-500 dark:text-slate-400">CEO, TechCore Holding</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Testimonial 2: Real Estate/Project Eval -->
+                <div class="relative p-8 bg-slate-50 dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-100 dark:border-slate-700 quote hover:shadow-2xl transition-shadow">
+                    <p class="relative z-10 text-slate-600 dark:text-slate-300 italic pt-6 pb-4">
+                        "Gracias al riguroso análisis de factibilidad de Fenix, evitamos una inversión riesgosa de $5M. Su metodología nos proporcionó la certeza que necesitábamos para reorientar el proyecto. Un socio estratégico."
+                    </p>
+                    <div class="flex items-center mt-4">
+                        <div class="w-10 h-10 bg-brand-green rounded-full flex items-center justify-center text-white font-bold text-lg mr-3">R</div>
+                        <div>
+                            <p class="font-bold text-slate-900 dark:text-white">Ricardo Palma</p>
+                            <p class="text-sm text-slate-500 dark:text-slate-400">Director, Inmobiliaria Altura</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Testimonial 3: Condominium/Admin -->
+                <div class="relative p-8 bg-slate-50 dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-100 dark:border-slate-700 quote hover:shadow-2xl transition-shadow">
+                    <p class="relative z-10 text-slate-600 dark:text-slate-300 italic pt-6 pb-4">
+                        "Implementar la administración de Fenix en nuestro condominio transformó la relación con los vecinos. La transparencia y el uso de tecnología nos permitió reducir la morosidad a niveles históricos."
+                    </p>
+                    <div class="flex items-center mt-4">
+                        <div class="w-10 h-10 bg-slate-500 rounded-full flex items-center justify-center text-white font-bold text-lg mr-3">J</div>
+                        <div>
+                            <p class="font-bold text-slate-900 dark:text-white">Javier Núñez</p>
+                            <p class="text-sm text-slate-500 dark:text-slate-400">Presidente Comité, Condominio El Faro</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- NEW SECTION: PROJECTS GALLERY -->
+    <section id="projects" class="py-20 bg-slate-50 dark:bg-slate-900 transition-colors">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <span class="text-brand-green font-semibold tracking-wider uppercase text-sm">Impacto y Resultados</span>
+                <h2 class="mt-2 text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white">Proyectos Inmobiliarios Destacados</h2>
+                <p class="mt-4 max-w-2xl mx-auto text-slate-500 dark:text-slate-400">
+                    Ejemplos de nuestra gestión financiera en el sector de la construcción e inmobiliario.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Project Card 1: Torre Ejecutiva -->
+                <div class="project-card relative bg-white dark:bg-slate-800 rounded-xl overflow-hidden shadow-xl group cursor-pointer">
+                    <!-- Image Placeholder -->
+                    <div class="h-64 bg-cover bg-center transition-all duration-500 group-hover:scale-105" 
+                         style="background-image: url('https://placehold.co/600x400/1E40AF/FFFFFF?text=Torre+Ejecutiva&font=inter');">
+                    </div>
+                    <!-- Overlay Info -->
+                    <div class="project-overlay absolute inset-0 bg-brand-blue/90 flex flex-col justify-end p-6 text-white opacity-0 transition-all duration-500 transform translate-y-full group-hover:translate-y-0">
+                        <h3 class="text-2xl font-bold mb-2">Torre Ejecutiva Central</h3>
+                        <p class="text-sm font-medium mb-3">Financiamiento de oficinas AAA en Santiago.</p>
+                        <div class="flex justify-between text-xs font-semibold uppercase border-t border-white/30 pt-3">
+                            <div>
+                                <p class="text-white/70">Capital Gestionado</p>
+                                <p class="text-lg text-brand-green font-extrabold">MM$ 55</p>
+                            </div>
+                            <div>
+                                <p class="text-white/70">Tasa de Venta (ROI)</p>
+                                <p class="text-lg text-brand-green font-extrabold">+18.5%</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Default Info (for non-hover) -->
+                    <div class="p-4 flex justify-between items-center dark:bg-slate-800">
+                         <h4 class="text-lg font-bold text-slate-900 dark:text-white">Torre Ejecutiva Central</h4>
+                         <span class="text-xs font-semibold text-brand-blue">Ver Detalle →</span>
+                    </div>
+                </div>
+
+                <!-- Project Card 2: Condominio Alto Bosque -->
+                <div class="project-card relative bg-white dark:bg-slate-800 rounded-xl overflow-hidden shadow-xl group cursor-pointer">
+                    <!-- Image Placeholder -->
+                    <div class="h-64 bg-cover bg-center transition-all duration-500 group-hover:scale-105" 
+                         style="background-image: url('https://placehold.co/600x400/059669/FFFFFF?text=Condominio+Residencial&font=inter');">
+                    </div>
+                    <!-- Overlay Info -->
+                    <div class="project-overlay absolute inset-0 bg-brand-green/90 flex flex-col justify-end p-6 text-white opacity-0 transition-all duration-500 transform translate-y-full group-hover:translate-y-0">
+                        <h3 class="text-2xl font-bold mb-2">Condominio Alto Bosque</h3>
+                        <p class="text-sm font-medium mb-3">Estructuración de fideicomiso y venta de unidades.</p>
+                        <div class="flex justify-between text-xs font-semibold uppercase border-t border-white/30 pt-3">
+                            <div>
+                                <p class="text-white/70">Capital Gestionado</p>
+                                <p class="text-lg text-brand-blue font-extrabold">MM$ 38</p>
+                            </div>
+                            <div>
+                                <p class="text-white/70">Tasa de Venta (ROI)</p>
+                                <p class="text-lg text-brand-blue font-extrabold">+15.2%</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Default Info (for non-hover) -->
+                    <div class="p-4 flex justify-between items-center dark:bg-slate-800">
+                         <h4 class="text-lg font-bold text-slate-900 dark:text-white">Condominio Alto Bosque</h4>
+                         <span class="text-xs font-semibold text-brand-green">Ver Detalle →</span>
+                    </div>
+                </div>
+
+                <!-- Project Card 3: Parque Industrial Sur -->
+                <div class="project-card relative bg-white dark:bg-slate-800 rounded-xl overflow-hidden shadow-xl group cursor-pointer">
+                    <!-- Image Placeholder -->
+                    <div class="h-64 bg-cover bg-center transition-all duration-500 group-hover:scale-105" 
+                         style="background-image: url('https://placehold.co/600x400/475569/FFFFFF?text=Parque+Industrial&font=inter');">
+                    </div>
+                    <!-- Overlay Info -->
+                    <div class="project-overlay absolute inset-0 bg-slate-700/90 flex flex-col justify-end p-6 text-white opacity-0 transition-all duration-500 transform translate-y-full group-hover:translate-y-0">
+                        <h3 class="text-2xl font-bold mb-2">Parque Industrial Sur</h3>
+                        <p class="text-sm font-medium mb-3">Project Finance para infraestructura logística de gran escala.</p>
+                        <div class="flex justify-between text-xs font-semibold uppercase border-t border-white/30 pt-3">
+                            <div>
+                                <p class="text-white/70">Capital Gestionado</p>
+                                <p class="text-lg text-brand-green font-extrabold">MM$ 120</p>
+                            </div>
+                            <div>
+                                <p class="text-white/70">Tasa de Venta (ROI)</p>
+                                <p class="text-lg text-brand-green font-extrabold">+22.1%</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Default Info (for non-hover) -->
+                    <div class="p-4 flex justify-between items-center dark:bg-slate-800">
+                         <h4 class="text-lg font-bold text-slate-900 dark:text-white">Parque Industrial Sur</h4>
+                         <span class="text-xs font-semibold text-slate-500">Ver Detalle →</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- END NEW SECTION -->
+
 
     <!-- TIMELINE: Scroll-Triggered Animation -->
     <section id="about" class="py-20 bg-white dark:bg-slate-800 overflow-hidden relative">
