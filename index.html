@@ -1,842 +1,360 @@
 <!DOCTYPE html>
-<html lang="es" class="scroll-smooth">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fenix SpA - Consultoría Financiera & Gestión Empresarial</title>
+    <title>Fenix SpA | Gestión Inteligente y Transparente</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
-    
-    <!-- Chosen Palette: Neutrals (Slate) with Deep Blue (#1E40AF) and Emerald Green (#059669) Accents. Dark mode support included. -->
-    <!-- Application Structure Plan: 
-         1. Hero Section
-         2. Stats Dashboard
-         3. Services Hub
-         4. Testimonials
-         5. Projects Gallery (NEW)
-         6. Timeline/About
-         7. Real Estate/Admin
-         8. Contact/Footer
-    -->
     <script>
         tailwind.config = {
-            darkMode: 'class', // Manual toggle with system pref logic
             theme: {
                 extend: {
                     fontFamily: {
                         sans: ['Inter', 'sans-serif'],
                     },
                     colors: {
-                        brand: {
-                            blue: '#1E40AF', // Azul Profundo
-                            green: '#059669', // Verde Esmeralda
-                            dark: '#0F172A',
-                            light: '#F8F9FA'
-                        }
+                        primary: '#0F172A', 
+                        accent: '#2563EB',  
+                        accentDark: '#1E40AF',
+                        surface: '#F1F5F9', 
                     },
-                    animation: {
-                        'fade-in-up': 'fadeInUp 0.8s ease-out forwards',
-                        'spin-slow': 'spin 8s linear infinite',
-                    },
-                    keyframes: {
-                        fadeInUp: {
-                            '0%': { opacity: '0', transform: 'translateY(20px)' },
-                            '100%': { opacity: '1', transform: 'translateY(0)' },
-                        }
+                    backgroundImage: {
+                        'grid-pattern': "url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTAgNDBoNDBWME0wIDBoNDB2NDBIeiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJyZ2JhKDE1LCAyMywgNDIsIDAuMDMpIiBzdHJva2Utd2lkdGg9IjEiLz48L3N2Zz4=')",
                     }
                 }
             }
         }
     </script>
     <style>
-        /* Custom Utilities */
-        .glass-panel {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-        }
-        .dark .glass-panel {
-            background: rgba(30, 41, 59, 0.7);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+        body { scroll-behavior: smooth; }
+        
+        /* Animaciones de Revelación */
+        .reveal { opacity: 0; transform: translateY(40px); transition: all 1s cubic-bezier(0.22, 1, 0.36, 1); }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+        
+        /* Navegación con Efecto Blur Premium */
+        .glass { 
+            background: rgba(255, 255, 255, 0.7); 
+            backdrop-filter: blur(15px); 
+            -webkit-backdrop-filter: blur(15px);
         }
         
-        /* 3D Cube CSS for Services */
-        .scene {
-            width: 60px;
-            height: 60px;
-            perspective: 600px;
+        /* Tarjetas de Experiencia con Sombras Dinámicas */
+        .experience-card {
+            background: #ffffff;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            border: 1px solid rgba(15, 23, 42, 0.05);
         }
-        .cube {
-            width: 100%;
-            height: 100%;
-            position: relative;
-            transform-style: preserve-3d;
-            transform: translateZ(-30px);
-            transition: transform 0.5s;
-        }
-        .cube-face {
-            position: absolute;
-            width: 60px;
-            height: 60px;
-            border: 2px solid currentColor;
-            line-height: 60px;
-            font-size: 30px;
-            font-weight: bold;
-            color: white;
-            text-align: center;
-            opacity: 0.9;
-        }
-        .cube__front  { transform: rotateY(  0deg) translateZ(30px); background: #1E40AF; }
-        .cube__right  { transform: rotateY( 90deg) translateZ(30px); background: #059669; }
-        .cube__back   { transform: rotateY(180deg) translateZ(30px); background: #1E40AF; }
-        .cube__left   { transform: rotateY(-90deg) translateZ(30px); background: #059669; }
-        .cube__top    { transform: rotateX( 90deg) translateZ(30px); background: #1E3A8A; }
-        .cube__bottom { transform: rotateX(-90deg) translateZ(30px); background: #065F46; }
-
-        .service-card:hover .cube {
-            transform: translateZ(-30px) rotateY(-90deg);
+        .experience-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 25px 50px -12px rgba(37, 99, 235, 0.15);
+            border-color: rgba(37, 99, 235, 0.4);
         }
 
-        /* Chart Container Strict Styling */
-        .chart-container {
-            position: relative;
-            width: 100%;
-            max-width: 800px; /* Max width constraint */
-            margin-left: auto;
-            margin-right: auto;
-            height: 300px; /* Base height */
-            max-height: 400px;
+        /* Value Cards con Gradientes Sutiles */
+        .value-card {
+            background: linear-gradient(135deg, rgba(255,255,255,1) 0%, rgba(248,250,252,1) 100%);
+            transition: all 0.5s ease;
+            border: 1px solid rgba(15, 23, 42, 0.05);
         }
-        @media (min-width: 768px) {
-            .chart-container {
-                height: 350px;
-            }
+        .value-card:hover {
+            background: white;
+            box-shadow: 20px 20px 60px #d1d9e6, -20px -20px 60px #ffffff;
+            border-color: #2563EB;
         }
-        /* Testimonial Quote Style (using unicode) */
-        .quote::before {
-            content: '“';
-            font-size: 4rem;
-            line-height: 1;
-            color: #1E40AF; /* brand-blue */
-            position: absolute;
-            left: 1rem;
-            top: 0.5rem;
-            opacity: 0.2;
+
+        /* Gradientes de Texto */
+        .text-gradient {
+            background: linear-gradient(to right, #2563EB, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
-        .dark .quote::before {
-            color: #60a5fa; /* blue-400 */
-        }
-        /* Project Card Hover Effect */
-        .project-card:hover .project-overlay {
-            opacity: 1;
-            transform: translateY(0);
+
+        /* Fondos con overlays */
+        .bg-overlay {
+            background-blend-mode: overlay;
+            background-attachment: fixed;
         }
     </style>
 </head>
-<body class="bg-brand-light text-slate-800 dark:bg-slate-900 dark:text-slate-100 transition-colors duration-300 font-sans antialiased overflow-x-hidden">
+<body class="bg-white text-primary font-sans antialiased bg-grid-pattern">
 
-    <!-- Navigation -->
-    <nav class="fixed w-full z-50 transition-all duration-300 glass-panel" id="navbar">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-20">
-                <div class="flex-shrink-0 cursor-pointer" onclick="window.scrollTo(0,0)">
-                    <span class="text-2xl font-extrabold tracking-tighter text-brand-blue dark:text-blue-400">FENIX<span class="text-brand-green dark:text-emerald-400">.</span>SPA</span>
+    <!-- Navegación -->
+    <nav class="fixed w-full z-50 glass border-b border-gray-100">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <div class="w-10 h-10 bg-primary rounded-lg flex items-center justify-center shadow-lg shadow-blue-900/20">
+                    <div class="w-5 h-5 border-2 border-blue-400 rotate-45"></div>
                 </div>
-                <div class="hidden md:block">
-                    <div class="ml-10 flex items-baseline space-x-8">
-                        <a href="#services" class="hover:text-brand-blue dark:hover:text-blue-400 px-3 py-2 rounded-md text-sm font-medium transition-colors">Servicios</a>
-                        <a href="#testimonials" class="hover:text-brand-blue dark:hover:text-blue-400 px-3 py-2 rounded-md text-sm font-medium transition-colors">Testimonios</a>
-                        <a href="#projects" class="hover:text-brand-blue dark:hover:text-blue-400 px-3 py-2 rounded-md text-sm font-medium transition-colors">Proyectos</a>
-                        <a href="#about" class="hover:text-brand-blue dark:hover:text-blue-400 px-3 py-2 rounded-md text-sm font-medium transition-colors">Quiénes Somos</a>
-                        <a href="#real-estate" class="hover:text-brand-blue dark:hover:text-blue-400 px-3 py-2 rounded-md text-sm font-medium transition-colors">Admin. Inmobiliaria</a>
-                        <a href="#contact" class="bg-brand-blue text-white hover:bg-blue-700 px-4 py-2 rounded-full text-sm font-medium transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">Contacto</a>
-                        <button id="theme-toggle" class="p-2 rounded-full hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors" aria-label="Toggle Dark Mode">
-                            <span id="theme-icon" class="text-xl">🌙</span>
-                        </button>
-                    </div>
-                </div>
-                <!-- Mobile menu button omitted for brevity but standard logic applies -->
+                <span class="text-xl font-extrabold tracking-tighter uppercase">Fenix <span class="text-accent">SpA</span></span>
+            </div>
+            <div class="hidden md:flex space-x-8 text-xs font-bold tracking-widest uppercase">
+                <a href="#experiencia" class="hover:text-accent transition-colors">Expertise</a>
+                <a href="#valores" class="hover:text-accent transition-colors">Valores</a>
+                <a href="#operacion" class="hover:text-accent transition-colors">Procesos</a>
+                <a href="#contacto" class="bg-accent text-white px-5 py-2 rounded-full hover:bg-primary transition-all shadow-md shadow-blue-600/20">Contacto</a>
             </div>
         </div>
     </nav>
 
-    <!-- HERO SECTION: AI Personalization -->
-    <section class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
-        <!-- Abstract Background Shapes using CSS/Tailwind (No SVG) -->
-        <div class="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 rounded-full bg-brand-blue opacity-5 blur-3xl dark:opacity-20"></div>
-        <div class="absolute bottom-0 left-0 -ml-20 -mb-20 w-80 h-80 rounded-full bg-brand-green opacity-5 blur-3xl dark:opacity-10"></div>
+    <!-- 1. Hero Section -->
+    <header class="relative h-[90vh] flex items-center justify-center overflow-hidden bg-primary">
+        <div class="absolute inset-0 bg-gradient-to-br from-primary via-primary/80 to-accent/10 z-10"></div>
+        <!-- Imagen: Edificio moderno con perspectiva dinámica -->
+        <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=2070" 
+             alt="Perspectiva de edificio corporativo moderno" 
+             class="absolute inset-0 w-full h-full object-cover opacity-50 scale-105 animate-[pulse_10s_infinite]">
 
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
-            <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight mb-6">
-                <span class="block text-slate-900 dark:text-white">Confianza. Experiencia.</span>
-                <span class="block text-transparent bg-clip-text bg-gradient-to-r from-brand-blue to-brand-green">Innovación Futura.</span>
-            </h1>
-            <p class="mt-4 max-w-2xl mx-auto text-xl text-slate-500 dark:text-slate-400">
-                Más de 30 años transformando empresas y proyectos en Chile. Asesoría financiera y gestión estratégica adaptada a tu realidad.
-            </p>
-
-            <!-- AI Personalization Widget -->
-            <div class="mt-10 max-w-xl mx-auto glass-panel rounded-2xl p-6 shadow-2xl transform transition-all duration-500 hover:scale-[1.01]">
-                <div class="flex flex-col space-y-4">
-                    <label for="user-segment" class="text-sm font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider">Personaliza tu experiencia (IA)</label>
-                    <div class="relative">
-                        <select id="user-segment" class="block w-full pl-4 pr-10 py-3 text-base border-gray-300 dark:border-gray-600 dark:bg-slate-800 focus:outline-none focus:ring-brand-blue focus:border-brand-blue sm:text-sm rounded-lg shadow-sm transition-colors">
-                            <option value="general">¿Cuál es tu perfil?</option>
-                            <option value="corporate">Director de Empresa / CEO</option>
-                            <option value="realestate">Inmobiliaria / Constructora</option>
-                            <option value="condo">Comité de Administración (Condominios)</option>
-                        </select>
-                    </div>
-                    <div id="dynamic-content" class="text-left pt-2 min-h-[80px]">
-                        <p class="text-slate-600 dark:text-slate-400 text-sm animate-fade-in-up">Selecciona tu perfil para recibir una recomendación de servicio personalizada.</p>
-                    </div>
-                    <button id="dynamic-cta" class="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-lg text-white bg-brand-blue hover:bg-blue-700 md:py-4 md:text-lg transition-all shadow-lg">
-                        Explorar Servicios
-                    </button>
-                </div>
-                <p class="mt-3 text-xs text-slate-400 text-center">Tus datos se usan solo para esta sesión. <a href="#" class="underline">Privacidad</a>.</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- STATS DASHBOARD: Visualization of Experience -->
-    <section class="py-16 bg-white dark:bg-slate-800 transition-colors">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-12">
-                <h2 class="text-3xl font-extrabold text-slate-900 dark:text-white">Nuestra Trayectoria en Cifras</h2>
-                <p class="mt-4 text-lg text-slate-500 dark:text-slate-400">Datos reales que respaldan nuestra gestión.</p>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-                <!-- Text Stats -->
-                <div class="grid grid-cols-1 gap-8">
-                    <div class="p-6 bg-slate-50 dark:bg-slate-700 rounded-xl shadow-sm border-l-4 border-brand-blue hover:shadow-md transition-shadow">
-                        <div class="text-4xl font-bold text-slate-900 dark:text-white" id="count-years">30+</div>
-                        <div class="text-sm font-medium text-slate-500 dark:text-slate-300 uppercase tracking-wide">Años de Experiencia</div>
-                    </div>
-                    <div class="p-6 bg-slate-50 dark:bg-slate-700 rounded-xl shadow-sm border-l-4 border-brand-green hover:shadow-md transition-shadow">
-                        <div class="text-4xl font-bold text-slate-900 dark:text-white" id="count-industries">12+</div>
-                        <div class="text-sm font-medium text-slate-500 dark:text-slate-300 uppercase tracking-wide">Industrias Atendidas</div>
-                        <p class="text-xs text-slate-400 mt-1">Telecom, Infraestructura, Inmobiliaria...</p>
-                    </div>
-                    <div class="p-6 bg-slate-50 dark:bg-slate-700 rounded-xl shadow-sm border-l-4 border-slate-400 hover:shadow-md transition-shadow">
-                        <div class="text-4xl font-bold text-slate-900 dark:text-white">MM$ 500+</div>
-                        <div class="text-sm font-medium text-slate-500 dark:text-slate-300 uppercase tracking-wide">Activos Gestionados</div>
-                    </div>
-                </div>
-
-                <!-- Chart.js Visualization -->
-                <div class="bg-white dark:bg-slate-900 rounded-2xl p-4 shadow-xl border border-slate-100 dark:border-slate-700">
-                    <div class="chart-container">
-                        <canvas id="growthChart"></canvas>
-                    </div>
-                    <p class="text-center text-xs text-slate-400 mt-4">Evolución de proyectos exitosos acumulados (1995-2025)</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- SERVICES: 3D Interactive Tabs -->
-    <section id="services" class="py-20 bg-slate-50 dark:bg-slate-900 transition-colors">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16">
-                <span class="text-brand-green font-semibold tracking-wider uppercase text-sm">Soluciones Integrales</span>
-                <h2 class="mt-2 text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white">Nuestros Servicios</h2>
-                <p class="mt-4 max-w-2xl mx-auto text-slate-500 dark:text-slate-400">
-                    Interactúa con nuestras áreas de especialización.
+        <div class="relative z-20 max-w-7xl mx-auto px-6 flex flex-col items-center text-center">
+            <div class="reveal active">
+                <span class="inline-block px-4 py-1 rounded-full bg-accent/20 text-accent text-xs font-bold tracking-widest uppercase mb-6 border border-accent/30">Líderes en Administración</span>
+                <h1 class="text-white text-5xl md:text-8xl font-extrabold tracking-tight leading-[1.1] mb-8">
+                    Gestión <span class="text-gradient">Inteligente</span> <br>
+                    para Comunidades.
+                </h1>
+                <p class="text-gray-300 text-lg md:text-2xl font-light max-w-2xl mb-12 leading-relaxed mx-auto">
+                    Elevamos el estándar operativo y financiero bajo la Ley 21.442 con precisión de 360 grados.
                 </p>
+                <div class="flex flex-wrap gap-4 justify-center">
+                    <a href="#experiencia" class="bg-accent text-white px-10 py-5 rounded-xl font-bold hover:scale-105 transition shadow-xl shadow-accent/30">Explorar Expertise</a>
+                    <a href="#contacto" class="bg-white/10 text-white backdrop-blur-md border border-white/20 px-10 py-5 rounded-xl font-bold hover:bg-white/20 transition">Contáctanos</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 2. Nuestra Experiencia -->
+    <section id="experiencia" class="py-32 bg-white relative overflow-hidden">
+        <div class="max-w-7xl mx-auto px-6 relative z-10">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-20 reveal">
+                <div class="md:w-2/3">
+                    <h2 class="text-accent font-bold uppercase tracking-[0.3em] text-xs mb-4">Trayectoria Ejecutiva</h2>
+                    <h3 class="text-4xl md:text-5xl font-extrabold leading-tight text-primary">
+                        Solidez en administración <br><span class="text-gradient">profesional.</span>
+                    </h3>
+                    <p class="text-gray-500 text-lg mt-6 max-w-xl">
+                        Más de 30 años transformando la gestión de comunidades en un modelo de precisión financiera.
+                    </p>
+                </div>
+                <div class="hidden md:block pb-2">
+                    <div class="text-6xl font-black text-gray-100">+30 AÑOS</div>
+                </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                <!-- Service Card 1 -->
-                <div class="service-card group bg-white dark:bg-slate-800 rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer transform hover:-translate-y-2">
-                    <div class="mb-6 flex justify-center">
-                        <div class="scene">
-                            <div class="cube">
-                                <div class="cube-face cube__front">AF</div>
-                                <div class="cube-face cube__back">AF</div>
-                                <div class="cube-face cube__right">$$</div>
-                                <div class="cube-face cube__left">$$</div>
-                                <div class="cube-face cube__top"></div>
-                                <div class="cube-face cube__bottom"></div>
-                            </div>
-                        </div>
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8 reveal">
+                <div class="experience-card p-10 rounded-[2.5rem] group">
+                    <div class="w-14 h-14 bg-blue-50 text-accent rounded-2xl flex items-center justify-center mb-8 group-hover:bg-accent group-hover:text-white transition-colors duration-500">
+                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
                     </div>
-                    <h3 class="text-xl font-bold text-center text-slate-900 dark:text-white mb-2">Asesoría Financiera</h3>
-                    <p class="text-slate-500 dark:text-slate-400 text-sm text-center">Optimización de flujos, reestructuración de pasivos y estrategias de capital de trabajo.</p>
+                    <h4 class="text-xl font-bold mb-4">Contabilidad Total</h4>
+                    <p class="text-gray-500 text-sm leading-relaxed">Balances mensuales auditables y conciliaciones bancarias diarias con transparencia radical.</p>
+                </div>
+                
+                <div class="experience-card p-10 rounded-[2.5rem] group">
+                    <div class="w-14 h-14 bg-blue-50 text-accent rounded-2xl flex items-center justify-center mb-8 group-hover:bg-accent group-hover:text-white transition-colors duration-500">
+                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                    </div>
+                    <h4 class="text-xl font-bold mb-4">Compliance Legal</h4>
+                    <p class="text-gray-500 text-sm leading-relaxed">Cumplimiento estricto de la Ley 21.442 y todas las obligaciones tributarias vigentes.</p>
                 </div>
 
-                <!-- Service Card 2 -->
-                <div class="service-card group bg-white dark:bg-slate-800 rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer transform hover:-translate-y-2">
-                    <div class="mb-6 flex justify-center">
-                        <div class="scene">
-                            <div class="cube">
-                                <div class="cube-face cube__front">GE</div>
-                                <div class="cube-face cube__back">GE</div>
-                                <div class="cube-face cube__right">⚙️</div>
-                                <div class="cube-face cube__left">⚙️</div>
-                                <div class="cube-face cube__top"></div>
-                                <div class="cube-face cube__bottom"></div>
-                            </div>
-                        </div>
+                <div class="experience-card p-10 rounded-[2.5rem] group">
+                    <div class="w-14 h-14 bg-blue-50 text-accent rounded-2xl flex items-center justify-center mb-8 group-hover:bg-accent group-hover:text-white transition-colors duration-500">
+                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
                     </div>
-                    <h3 class="text-xl font-bold text-center text-slate-900 dark:text-white mb-2">Gestión Empresarial</h3>
-                    <p class="text-slate-500 dark:text-slate-400 text-sm text-center">Planificación estratégica y control de gestión para directorios y alta gerencia.</p>
+                    <h4 class="text-xl font-bold mb-4">Auditoría Activa</h4>
+                    <p class="text-gray-500 text-sm leading-relaxed">Revisiones preventivas para asegurar la probidad y el buen uso de los fondos de reserva.</p>
                 </div>
 
-                <!-- Service Card 3 -->
-                <div class="service-card group bg-white dark:bg-slate-800 rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer transform hover:-translate-y-2">
-                    <div class="mb-6 flex justify-center">
-                        <div class="scene">
-                            <div class="cube">
-                                <div class="cube-face cube__front">EP</div>
-                                <div class="cube-face cube__back">EP</div>
-                                <div class="cube-face cube__right">📈</div>
-                                <div class="cube-face cube__left">📈</div>
-                                <div class="cube-face cube__top"></div>
-                                <div class="cube-face cube__bottom"></div>
-                            </div>
-                        </div>
+                <div class="experience-card p-10 rounded-[2.5rem] group">
+                    <div class="w-14 h-14 bg-blue-50 text-accent rounded-2xl flex items-center justify-center mb-8 group-hover:bg-accent group-hover:text-white transition-colors duration-500">
+                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
                     </div>
-                    <h3 class="text-xl font-bold text-center text-slate-900 dark:text-white mb-2">Evaluación de Proyectos</h3>
-                    <p class="text-slate-500 dark:text-slate-400 text-sm text-center">Análisis de factibilidad técnica y económica para inversiones de alto impacto.</p>
-                </div>
-
-                <!-- Service Card 4 -->
-                <div class="service-card group bg-white dark:bg-slate-800 rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer transform hover:-translate-y-2">
-                    <div class="mb-6 flex justify-center">
-                        <div class="scene">
-                            <div class="cube">
-                                <div class="cube-face cube__front">FE</div>
-                                <div class="cube-face cube__back">FE</div>
-                                <div class="cube-face cube__right">🏛️</div>
-                                <div class="cube-face cube__left">🏛️</div>
-                                <div class="cube-face cube__top"></div>
-                                <div class="cube-face cube__bottom"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <h3 class="text-xl font-bold text-center text-slate-900 dark:text-white mb-2">Financiamientos</h3>
-                    <p class="text-slate-500 dark:text-slate-400 text-sm text-center">Estructuración de Project Finance y sindicados para infraestructura y construcción.</p>
+                    <h4 class="text-xl font-bold mb-4">Plan Estratégico</h4>
+                    <p class="text-gray-500 text-sm leading-relaxed">Visión de largo plazo para aumentar la plusvalía del edificio mediante optimización de recursos.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- TESTIMONIALS -->
-    <section id="testimonials" class="py-20 bg-white dark:bg-slate-800 transition-colors">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16">
-                <span class="text-brand-blue font-semibold tracking-wider uppercase text-sm">Validación Externa</span>
-                <h2 class="mt-2 text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white">Lo que Dicen Nuestros Clientes</h2>
-                <p class="mt-4 max-w-2xl mx-auto text-slate-500 dark:text-slate-400">
-                    Nuestra mayor credibilidad proviene de los resultados que entregamos y la confianza de nuestros socios.
-                </p>
+    <!-- 3. Valores & Diferenciadores -->
+    <section id="valores" class="py-32 bg-surface relative overflow-hidden">
+        <div class="max-w-7xl mx-auto px-6 relative z-10">
+            <div class="grid lg:grid-cols-2 gap-20 items-center">
+                
+                <div class="reveal">
+                    <h2 class="text-4xl md:text-5xl font-extrabold mb-10 leading-tight">La trazabilidad como <br><span class="text-gradient">principio rector.</span></h2>
+                    <div class="space-y-8">
+                        <div class="p-10 bg-white rounded-3xl shadow-xl shadow-gray-200/50 border border-gray-100 relative overflow-hidden">
+                            <div class="absolute top-0 left-0 w-2 h-full bg-accent"></div>
+                            <p class="text-gray-600 text-xl italic leading-relaxed">
+                                "Garantizamos que cada peso de la comunidad esté respaldado, buscando la precisión y el acompañamiento personalizado en cada gestión."
+                            </p>
+                            <footer class="text-primary font-bold not-italic mt-8 flex items-center space-x-4">
+                                <img src="https://ui-avatars.com/api/?name=Fenix+SpA&background=0F172A&color=fff" class="w-10 h-10 rounded-full" alt="Avatar">
+                                <div>
+                                    <p class="text-sm tracking-widest uppercase">Dirección Ejecutiva</p>
+                                    <p class="text-accent text-xs">Fenix SpA Expertise</p>
+                                </div>
+                            </footer>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-6 reveal delay-200">
+                    <div class="value-card p-8 rounded-[2rem]">
+                        <div class="flex justify-between items-start mb-6">
+                            <div class="dot-indicator w-4 h-4 bg-blue-100 rounded-full"></div>
+                            <span class="text-[10px] font-black text-gray-400 uppercase tracking-[0.3em]">Valor 01</span>
+                        </div>
+                        <h4 class="text-xl font-bold mb-3">Transparencia</h4>
+                        <p class="text-gray-400 text-sm leading-relaxed">Acceso total a la información financiera en tiempo real.</p>
+                    </div>
+
+                    <div class="value-card p-8 rounded-[2rem]">
+                        <div class="flex justify-between items-start mb-6">
+                            <div class="dot-indicator w-4 h-4 bg-blue-100 rounded-full"></div>
+                            <span class="text-[10px] font-black text-gray-400 uppercase tracking-[0.3em]">Valor 02</span>
+                        </div>
+                        <h4 class="text-xl font-bold mb-3">Precisión</h4>
+                        <p class="text-gray-400 text-sm leading-relaxed">Cálculos exactos bajo normativas contables vigentes.</p>
+                    </div>
+
+                    <div class="value-card p-8 rounded-[2rem]">
+                        <div class="flex justify-between items-start mb-6">
+                            <div class="dot-indicator w-4 h-4 bg-blue-100 rounded-full"></div>
+                            <span class="text-[10px] font-black text-gray-400 uppercase tracking-[0.3em]">Valor 03</span>
+                        </div>
+                        <h4 class="text-xl font-bold mb-3">Presencia</h4>
+                        <p class="text-gray-400 text-sm leading-relaxed">Acompañamiento directo en asambleas y comités.</p>
+                    </div>
+
+                    <div class="value-card p-8 rounded-[2rem]">
+                        <div class="flex justify-between items-start mb-6">
+                            <div class="dot-indicator w-4 h-4 bg-blue-100 rounded-full"></div>
+                            <span class="text-[10px] font-black text-gray-400 uppercase tracking-[0.3em]">Valor 04</span>
+                        </div>
+                        <h4 class="text-xl font-bold mb-3">Protección</h4>
+                        <p class="text-gray-400 text-sm leading-relaxed">Resguardo del patrimonio y activos de la comunidad.</p>
+                    </div>
+                </div>
             </div>
+        </div>
+    </section>
+
+    <!-- 4. Gestión Operativa -->
+    <section id="operacion" class="py-32 bg-white relative">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-24 reveal">
+                <span class="text-accent font-bold tracking-[0.4em] text-xs uppercase mb-4 inline-block">Control Total</span>
+                <h2 class="text-4xl md:text-5xl font-extrabold mb-6">Procesos Operativos Eficientes.</h2>
+                <div class="w-20 h-1.5 bg-accent mx-auto rounded-full"></div>
+            </div>
+
+            <div class="grid md:grid-cols-4 gap-4 reveal">
+                <div class="group p-10 border border-gray-100 rounded-[2.5rem] hover:bg-primary transition-all duration-700 hover:shadow-2xl hover:shadow-blue-900/40">
+                    <span class="text-3xl font-black text-blue-50 group-hover:text-white/10 transition-colors">01</span>
+                    <h4 class="font-bold text-xl mt-6 mb-4 group-hover:text-white">Licitaciones</h4>
+                    <p class="text-sm text-gray-400 group-hover:text-gray-300">Selección rigurosa de proveedores con transparencia absoluta.</p>
+                </div>
+                <div class="group p-10 border border-gray-100 rounded-[2.5rem] hover:bg-primary transition-all duration-700 hover:shadow-2xl hover:shadow-blue-900/40">
+                    <span class="text-3xl font-black text-blue-50 group-hover:text-white/10 transition-colors">02</span>
+                    <h4 class="font-bold text-xl mt-6 mb-4 group-hover:text-white">Mantenimiento</h4>
+                    <p class="text-sm text-gray-400 group-hover:text-gray-300">Programas preventivos para asegurar la continuidad operativa.</p>
+                </div>
+                <div class="group p-10 border border-gray-100 rounded-[2.5rem] hover:bg-primary transition-all duration-700 hover:shadow-2xl hover:shadow-blue-900/40">
+                    <span class="text-3xl font-black text-blue-50 group-hover:text-white/10 transition-colors">03</span>
+                    <h4 class="font-bold text-xl mt-6 mb-4 group-hover:text-white">RRHH</h4>
+                    <p class="text-sm text-gray-400 group-hover:text-gray-300">Gestión de remuneraciones y leyes sociales sin margen de error.</p>
+                </div>
+                <div class="group p-10 border border-gray-100 rounded-[2.5rem] hover:bg-primary transition-all duration-700 hover:shadow-2xl hover:shadow-blue-900/40">
+                    <span class="text-3xl font-black text-blue-50 group-hover:text-white/10 transition-colors">04</span>
+                    <h4 class="font-bold text-xl mt-6 mb-4 group-hover:text-white">Seguridad</h4>
+                    <p class="text-sm text-gray-400 group-hover:text-gray-300">Protocolos estandarizados para el resguardo de residentes.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. CTA Final -->
+    <section id="contacto" class="py-32 relative overflow-hidden bg-primary">
+        <div class="absolute inset-0 bg-overlay opacity-20" style="background-image: url('https://images.unsplash.com/photo-1542362567-b055002b91f4?auto=format&fit=crop&q=80&w=2000');"></div>
+        <div class="max-w-4xl mx-auto px-6 text-center relative z-10">
+            <h2 class="text-4xl md:text-6xl font-extrabold mb-8 text-white reveal leading-tight">Elevamos su comunidad <br>al siguiente nivel.</h2>
+            <p class="text-gray-300 text-xl mb-16 reveal">Agende una auditoría de cortesía y descubra el valor del orden.</p>
             
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <!-- Testimonial 1: Corporate/Finance -->
-                <div class="relative p-8 bg-slate-50 dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-100 dark:border-slate-700 quote hover:shadow-2xl transition-shadow">
-                    <p class="relative z-10 text-slate-600 dark:text-slate-300 italic pt-6 pb-4">
-                        "La reestructuración que gestionó Fenix SpA fue clave para asegurar nuestra continuidad. Su visión de largo plazo y manejo de crisis no tiene comparación. Aumentamos nuestra liquidez en un 40%."
-                    </p>
-                    <div class="flex items-center mt-4">
-                        <div class="w-10 h-10 bg-brand-blue rounded-full flex items-center justify-center text-white font-bold text-lg mr-3">D</div>
-                        <div>
-                            <p class="font-bold text-slate-900 dark:text-white">Daniela Soto</p>
-                            <p class="text-sm text-slate-500 dark:text-slate-400">CEO, TechCore Holding</p>
-                        </div>
-                    </div>
+            <form id="contactForm" class="grid md:grid-cols-2 gap-6 mb-12 reveal text-left">
+                <div class="space-y-2">
+                    <label class="text-xs font-bold uppercase tracking-widest text-blue-400">Nombre Completo</label>
+                    <input type="text" placeholder="Ej: Juan Pérez" required class="w-full bg-white/5 border border-white/10 p-5 rounded-2xl focus:outline-none focus:border-accent text-white transition">
                 </div>
-
-                <!-- Testimonial 2: Real Estate/Project Eval -->
-                <div class="relative p-8 bg-slate-50 dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-100 dark:border-slate-700 quote hover:shadow-2xl transition-shadow">
-                    <p class="relative z-10 text-slate-600 dark:text-slate-300 italic pt-6 pb-4">
-                        "Gracias al riguroso análisis de factibilidad de Fenix, evitamos una inversión riesgosa de $5M. Su metodología nos proporcionó la certeza que necesitábamos para reorientar el proyecto. Un socio estratégico."
-                    </p>
-                    <div class="flex items-center mt-4">
-                        <div class="w-10 h-10 bg-brand-green rounded-full flex items-center justify-center text-white font-bold text-lg mr-3">R</div>
-                        <div>
-                            <p class="font-bold text-slate-900 dark:text-white">Ricardo Palma</p>
-                            <p class="text-sm text-slate-500 dark:text-slate-400">Director, Inmobiliaria Altura</p>
-                        </div>
-                    </div>
+                <div class="space-y-2">
+                    <label class="text-xs font-bold uppercase tracking-widest text-blue-400">Email Corporativo</label>
+                    <input type="email" placeholder="ejemplo@comunidad.cl" required class="w-full bg-white/5 border border-white/10 p-5 rounded-2xl focus:outline-none focus:border-accent text-white transition">
                 </div>
-
-                <!-- Testimonial 3: Condominium/Admin -->
-                <div class="relative p-8 bg-slate-50 dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-100 dark:border-slate-700 quote hover:shadow-2xl transition-shadow">
-                    <p class="relative z-10 text-slate-600 dark:text-slate-300 italic pt-6 pb-4">
-                        "Implementar la administración de Fenix en nuestro condominio transformó la relación con los vecinos. La transparencia y el uso de tecnología nos permitió reducir la morosidad a niveles históricos."
-                    </p>
-                    <div class="flex items-center mt-4">
-                        <div class="w-10 h-10 bg-slate-500 rounded-full flex items-center justify-center text-white font-bold text-lg mr-3">J</div>
-                        <div>
-                            <p class="font-bold text-slate-900 dark:text-white">Javier Núñez</p>
-                            <p class="text-sm text-slate-500 dark:text-slate-400">Presidente Comité, Condominio El Faro</p>
-                        </div>
-                    </div>
+                <div class="md:col-span-2 space-y-2">
+                    <label class="text-xs font-bold uppercase tracking-widest text-blue-400">Mensaje / Requerimiento</label>
+                    <textarea placeholder="Cuéntenos sobre su edificio o condominio..." class="w-full bg-white/5 border border-white/10 p-5 rounded-2xl h-40 focus:outline-none focus:border-accent text-white transition"></textarea>
+                </div>
+                <button type="submit" class="md:col-span-2 bg-accent hover:bg-white hover:text-primary transition-all duration-500 p-6 rounded-2xl font-black text-xl shadow-2xl shadow-accent/20">
+                    Enviar Solicitud de Información
+                </button>
+            </form>
+            <div class="flex justify-center space-x-12 reveal delay-400">
+                <div class="text-center">
+                    <p class="text-accent font-black text-3xl">100%</p>
+                    <p class="text-gray-500 text-[10px] uppercase tracking-tighter">Transparencia</p>
+                </div>
+                <div class="text-center">
+                    <p class="text-accent font-black text-3xl">24/7</p>
+                    <p class="text-gray-500 text-[10px] uppercase tracking-tighter">Disponibilidad</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- NEW SECTION: PROJECTS GALLERY -->
-    <section id="projects" class="py-20 bg-slate-50 dark:bg-slate-900 transition-colors">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16">
-                <span class="text-brand-green font-semibold tracking-wider uppercase text-sm">Impacto y Resultados</span>
-                <h2 class="mt-2 text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white">Proyectos Inmobiliarios Destacados</h2>
-                <p class="mt-4 max-w-2xl mx-auto text-slate-500 dark:text-slate-400">
-                    Ejemplos de nuestra gestión financiera en el sector de la construcción e inmobiliario.
-                </p>
+    <!-- Footer -->
+    <footer class="py-16 bg-white border-t border-gray-100">
+        <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center text-sm text-gray-400 uppercase tracking-widest font-bold">
+            <div class="flex items-center space-x-4 mb-8 md:mb-0">
+                <span class="text-primary tracking-tighter text-lg font-black italic">FENIX SpA</span>
+                <span class="h-4 w-px bg-gray-200"></span>
+                <span>Santiago, Chile</span>
             </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <!-- Project Card 1: Torre Ejecutiva -->
-                <div class="project-card relative bg-white dark:bg-slate-800 rounded-xl overflow-hidden shadow-xl group cursor-pointer">
-                    <!-- Image Placeholder -->
-                    <div class="h-64 bg-cover bg-center transition-all duration-500 group-hover:scale-105" 
-                         style="background-image: url('https://placehold.co/600x400/1E40AF/FFFFFF?text=Torre+Ejecutiva&font=inter');">
-                    </div>
-                    <!-- Overlay Info -->
-                    <div class="project-overlay absolute inset-0 bg-brand-blue/90 flex flex-col justify-end p-6 text-white opacity-0 transition-all duration-500 transform translate-y-full group-hover:translate-y-0">
-                        <h3 class="text-2xl font-bold mb-2">Torre Ejecutiva Central</h3>
-                        <p class="text-sm font-medium mb-3">Financiamiento de oficinas AAA en Santiago.</p>
-                        <div class="flex justify-between text-xs font-semibold uppercase border-t border-white/30 pt-3">
-                            <div>
-                                <p class="text-white/70">Capital Gestionado</p>
-                                <p class="text-lg text-brand-green font-extrabold">MM$ 55</p>
-                            </div>
-                            <div>
-                                <p class="text-white/70">Tasa de Venta (ROI)</p>
-                                <p class="text-lg text-brand-green font-extrabold">+18.5%</p>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Default Info (for non-hover) -->
-                    <div class="p-4 flex justify-between items-center dark:bg-slate-800">
-                         <h4 class="text-lg font-bold text-slate-900 dark:text-white">Torre Ejecutiva Central</h4>
-                         <span class="text-xs font-semibold text-brand-blue">Ver Detalle →</span>
-                    </div>
-                </div>
-
-                <!-- Project Card 2: Condominio Alto Bosque -->
-                <div class="project-card relative bg-white dark:bg-slate-800 rounded-xl overflow-hidden shadow-xl group cursor-pointer">
-                    <!-- Image Placeholder -->
-                    <div class="h-64 bg-cover bg-center transition-all duration-500 group-hover:scale-105" 
-                         style="background-image: url('https://placehold.co/600x400/059669/FFFFFF?text=Condominio+Residencial&font=inter');">
-                    </div>
-                    <!-- Overlay Info -->
-                    <div class="project-overlay absolute inset-0 bg-brand-green/90 flex flex-col justify-end p-6 text-white opacity-0 transition-all duration-500 transform translate-y-full group-hover:translate-y-0">
-                        <h3 class="text-2xl font-bold mb-2">Condominio Alto Bosque</h3>
-                        <p class="text-sm font-medium mb-3">Estructuración de fideicomiso y venta de unidades.</p>
-                        <div class="flex justify-between text-xs font-semibold uppercase border-t border-white/30 pt-3">
-                            <div>
-                                <p class="text-white/70">Capital Gestionado</p>
-                                <p class="text-lg text-brand-blue font-extrabold">MM$ 38</p>
-                            </div>
-                            <div>
-                                <p class="text-white/70">Tasa de Venta (ROI)</p>
-                                <p class="text-lg text-brand-blue font-extrabold">+15.2%</p>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Default Info (for non-hover) -->
-                    <div class="p-4 flex justify-between items-center dark:bg-slate-800">
-                         <h4 class="text-lg font-bold text-slate-900 dark:text-white">Condominio Alto Bosque</h4>
-                         <span class="text-xs font-semibold text-brand-green">Ver Detalle →</span>
-                    </div>
-                </div>
-
-                <!-- Project Card 3: Parque Industrial Sur -->
-                <div class="project-card relative bg-white dark:bg-slate-800 rounded-xl overflow-hidden shadow-xl group cursor-pointer">
-                    <!-- Image Placeholder -->
-                    <div class="h-64 bg-cover bg-center transition-all duration-500 group-hover:scale-105" 
-                         style="background-image: url('https://placehold.co/600x400/475569/FFFFFF?text=Parque+Industrial&font=inter');">
-                    </div>
-                    <!-- Overlay Info -->
-                    <div class="project-overlay absolute inset-0 bg-slate-700/90 flex flex-col justify-end p-6 text-white opacity-0 transition-all duration-500 transform translate-y-full group-hover:translate-y-0">
-                        <h3 class="text-2xl font-bold mb-2">Parque Industrial Sur</h3>
-                        <p class="text-sm font-medium mb-3">Project Finance para infraestructura logística de gran escala.</p>
-                        <div class="flex justify-between text-xs font-semibold uppercase border-t border-white/30 pt-3">
-                            <div>
-                                <p class="text-white/70">Capital Gestionado</p>
-                                <p class="text-lg text-brand-green font-extrabold">MM$ 120</p>
-                            </div>
-                            <div>
-                                <p class="text-white/70">Tasa de Venta (ROI)</p>
-                                <p class="text-lg text-brand-green font-extrabold">+22.1%</p>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Default Info (for non-hover) -->
-                    <div class="p-4 flex justify-between items-center dark:bg-slate-800">
-                         <h4 class="text-lg font-bold text-slate-900 dark:text-white">Parque Industrial Sur</h4>
-                         <span class="text-xs font-semibold text-slate-500">Ver Detalle →</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    <!-- END NEW SECTION -->
-
-
-    <!-- TIMELINE: Scroll-Triggered Animation -->
-    <section id="about" class="py-20 bg-white dark:bg-slate-800 overflow-hidden relative">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 class="text-3xl font-extrabold text-slate-900 dark:text-white mb-12 text-center">Nuestra Historia</h2>
-            
-            <div class="relative border-l-4 border-slate-200 dark:border-slate-700 ml-6 md:ml-1/2 space-y-12">
-                <!-- Timeline Item 1 -->
-                <div class="timeline-item relative pl-8 md:pl-0 opacity-0 transform translate-y-10 transition-all duration-1000">
-                    <div class="absolute -left-[11px] top-0 w-6 h-6 bg-brand-blue rounded-full border-4 border-white dark:border-slate-800"></div>
-                    <div class="md:flex md:justify-between md:items-center md:flex-row-reverse">
-                        <div class="md:w-5/12 mb-2 md:mb-0"></div>
-                        <div class="md:w-5/12 bg-slate-50 dark:bg-slate-700 p-6 rounded-xl shadow-md">
-                            <span class="text-brand-blue font-bold text-lg block mb-2">1995</span>
-                            <h3 class="text-xl font-bold text-slate-900 dark:text-white">Fundación</h3>
-                            <p class="text-slate-500 dark:text-slate-300 mt-2">Nace Fenix SpA con el objetivo de profesionalizar la asesoría financiera en Chile.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Timeline Item 2 -->
-                <div class="timeline-item relative pl-8 md:pl-0 opacity-0 transform translate-y-10 transition-all duration-1000 delay-200">
-                    <div class="absolute -left-[11px] top-0 w-6 h-6 bg-brand-green rounded-full border-4 border-white dark:border-slate-800"></div>
-                    <div class="md:flex md:justify-between md:items-center">
-                        <div class="md:w-5/12 mb-2 md:mb-0"></div>
-                        <div class="md:w-5/12 bg-slate-50 dark:bg-slate-700 p-6 rounded-xl shadow-md md:text-right">
-                            <span class="text-brand-green font-bold text-lg block mb-2">2010</span>
-                            <h3 class="text-xl font-bold text-slate-900 dark:text-white">Expansión Telecom & Infraestructura</h3>
-                            <p class="text-slate-500 dark:text-slate-300 mt-2">Lideramos financiamientos estructurados para grandes proyectos de fibra óptica y carreteras.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Timeline Item 3 -->
-                <div class="timeline-item relative pl-8 md:pl-0 opacity-0 transform translate-y-10 transition-all duration-1000 delay-400">
-                    <div class="absolute -left-[11px] top-0 w-6 h-6 bg-slate-800 dark:bg-white rounded-full border-4 border-white dark:border-slate-800"></div>
-                    <div class="md:flex md:justify-between md:items-center md:flex-row-reverse">
-                        <div class="md:w-5/12 mb-2 md:mb-0"></div>
-                        <div class="md:w-5/12 bg-slate-50 dark:bg-slate-700 p-6 rounded-xl shadow-md">
-                            <span class="text-slate-800 dark:text-white font-bold text-lg block mb-2">2025</span>
-                            <h3 class="text-xl font-bold text-slate-900 dark:text-white">Integración Tecnológica</h3>
-                            <p class="text-slate-500 dark:text-slate-300 mt-2">Incorporamos IA y analítica avanzada en la administración inmobiliaria y evaluación de proyectos.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- REAL ESTATE & AR PREVIEW -->
-    <section id="real-estate" class="py-20 bg-slate-900 text-white relative overflow-hidden">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-                <div>
-                    <span class="inline-block py-1 px-3 rounded-full bg-brand-blue/20 text-brand-blue text-xs font-semibold uppercase mb-4 border border-brand-blue/30">Ley 21.442</span>
-                    <h2 class="text-3xl md:text-5xl font-extrabold mb-6">Administración Inmobiliaria 4.0</h2>
-                    <p class="text-slate-400 text-lg mb-8">
-                        Gestión transparente y moderna para condominios. Cumplimiento total de la nueva ley de copropiedad con reportes en tiempo real.
-                    </p>
-                    
-                    <ul class="space-y-4 mb-8">
-                        <li class="flex items-center">
-                            <span class="h-6 w-6 flex items-center justify-center rounded-full bg-brand-green text-white text-xs mr-3">✓</span>
-                            <span>Auditoría de Gastos Comunes</span>
-                        </li>
-                        <li class="flex items-center">
-                            <span class="h-6 w-6 flex items-center justify-center rounded-full bg-brand-green text-white text-xs mr-3">✓</span>
-                            <span>Mantención Preventiva de Infraestructura</span>
-                        </li>
-                        <li class="flex items-center">
-                            <span class="h-6 w-6 flex items-center justify-center rounded-full bg-brand-green text-white text-xs mr-3">✓</span>
-                            <span>Asesoría Legal Permanente</span>
-                        </li>
-                    </ul>
-
-                    <button class="bg-white text-slate-900 hover:bg-slate-200 px-6 py-3 rounded-lg font-bold transition-colors">
-                        Solicitar Auditoría
-                    </button>
-                </div>
-
-                <!-- Canvas AR Mockup -->
-                <div class="bg-slate-800 rounded-2xl p-4 shadow-2xl border border-slate-700">
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="font-bold text-sm text-slate-300">Vista Inmersiva de Propiedad (Simulación)</h3>
-                        <span class="text-xs text-brand-green animate-pulse">● Live Preview</span>
-                    </div>
-                    <div class="chart-container" style="height: 300px;">
-                        <canvas id="arCanvas" class="w-full h-full rounded-lg bg-slate-900"></canvas>
-                    </div>
-                    <p class="text-xs text-center text-slate-500 mt-3">Arrastra para rotar el modelo (Simulado con HTML5 Canvas)</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- CONTACT & FOOTER -->
-    <section id="contact" class="py-20 bg-slate-50 dark:bg-slate-900">
-        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="glass-panel rounded-3xl p-8 md:p-12 shadow-2xl">
-                <div class="text-center mb-10">
-                    <h2 class="text-3xl font-bold text-slate-900 dark:text-white">Hablemos de tu Futuro</h2>
-                    <p class="mt-2 text-slate-500 dark:text-slate-400">Déjanos tus datos o inicia un chat con nuestro asistente.</p>
-                </div>
-
-                <form class="space-y-6">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Nombre</label>
-                            <input type="text" class="w-full px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-600 dark:bg-slate-800 focus:ring-2 focus:ring-brand-blue outline-none transition-shadow">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Email</label>
-                            <input type="email" class="w-full px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-600 dark:bg-slate-800 focus:ring-2 focus:ring-brand-blue outline-none transition-shadow">
-                        </div>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Mensaje</label>
-                        <textarea rows="4" class="w-full px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-600 dark:bg-slate-800 focus:ring-2 focus:ring-brand-blue outline-none transition-shadow"></textarea>
-                    </div>
-                    <button type="button" class="w-full py-3 bg-brand-blue text-white font-bold rounded-lg hover:bg-blue-800 transition-colors shadow-lg">
-                        Enviar Consulta
-                    </button>
-                </form>
-            </div>
-        </div>
-    </section>
-
-    <footer class="bg-slate-900 text-slate-400 py-12 border-t border-slate-800">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <div class="flex justify-center items-center space-x-6 mb-8">
-                <span class="text-2xl font-bold text-white">FENIX.SPA</span>
-            </div>
-            <p class="mb-4 text-sm">&copy; 2025 Fenix SpA. Todos los derechos reservados.</p>
-            <div class="flex justify-center space-x-6 text-sm">
-                <a href="#" class="hover:text-white transition-colors">Privacidad</a>
-                <a href="#" class="hover:text-white transition-colors">Términos</a>
-                <a href="#" class="hover:text-white transition-colors">Mapa del Sitio</a>
+            <div class="flex space-x-12">
+                <a href="mailto:contacto@fenixspa.cl" class="hover:text-accent transition">Email</a>
+                <a href="tel:+56996267913" class="hover:text-accent transition">Llámanos</a>
+                <a href="#" class="hover:text-accent transition">LinkedIn</a>
             </div>
         </div>
     </footer>
 
-    <!-- JAVASCRIPT LOGIC -->
     <script>
-        // --- 1. DARK MODE TOGGLE ---
-        const themeToggle = document.getElementById('theme-toggle');
-        const themeIcon = document.getElementById('theme-icon');
-        const html = document.documentElement;
-
-        // Check system preference
-        if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-            html.classList.add('dark');
-            themeIcon.textContent = '☀️';
-        }
-
-        themeToggle.addEventListener('click', () => {
-            html.classList.toggle('dark');
-            themeIcon.textContent = html.classList.contains('dark') ? '☀️' : '🌙';
-            updateChartColors(); // Update Chart.js colors
-        });
-
-        // --- 2. AI PERSONALIZATION ENGINE (HERO) ---
-        const userSegment = document.getElementById('user-segment');
-        const dynamicContent = document.getElementById('dynamic-content');
-        const dynamicCTA = document.getElementById('dynamic-cta');
-
-        const contentMap = {
-            'corporate': {
-                text: "Para <span class='font-bold text-brand-blue'>Directorios</span>: Maximizamos el valor de su empresa mediante reestructuración financiera y control de gestión avanzado.",
-                cta: "Ver Soluciones Corporativas"
-            },
-            'realestate': {
-                text: "Para <span class='font-bold text-brand-blue'>Inmobiliarias</span>: Evaluamos la factibilidad de tus proyectos y estructuramos el financiamiento necesario para crecer.",
-                cta: "Evaluar Proyecto"
-            },
-            'condo': {
-                text: "Para <span class='font-bold text-brand-green'>Comités</span>: Gestión transparente bajo Ley 21.442. Auditorías claras y reducción de morosidad.",
-                cta: "Optimizar Condominio"
-            },
-            'general': {
-                text: "Selecciona tu perfil para recibir una recomendación de servicio personalizada.",
-                cta: "Explorar Servicios"
-            }
-        };
-
-        userSegment.addEventListener('change', (e) => {
-            const val = e.target.value;
-            const content = contentMap[val] || contentMap['general'];
-            
-            // Fade out
-            dynamicContent.style.opacity = '0';
-            
-            setTimeout(() => {
-                dynamicContent.innerHTML = `<p class="text-slate-600 dark:text-slate-400 text-sm animate-fade-in-up">${content.text}</p>`;
-                dynamicCTA.textContent = content.cta;
-                dynamicCTA.classList.add('animate-pulse');
-                setTimeout(() => dynamicCTA.classList.remove('animate-pulse'), 500);
-                dynamicContent.style.opacity = '1';
-            }, 300);
-        });
-
-        // --- 3. CHART.JS VISUALIZATION (STATS) ---
-        let growthChartInstance;
-
-        function initChart() {
-            const ctx = document.getElementById('growthChart').getContext('2d');
-            const isDark = html.classList.contains('dark');
-            const gridColor = isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.05)';
-            const textColor = isDark ? '#94a3b8' : '#64748b';
-
-            if(growthChartInstance) growthChartInstance.destroy();
-
-            growthChartInstance = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: ['1995', '2000', '2005', '2010', '2015', '2020', '2025'],
-                    datasets: [{
-                        label: 'Valor de Activos Gestionados (Indexado)',
-                        data: [10, 25, 45, 120, 180, 350, 500],
-                        borderColor: '#1E40AF',
-                        backgroundColor: 'rgba(30, 64, 175, 0.1)',
-                        borderWidth: 3,
-                        tension: 0.4,
-                        fill: true,
-                        pointBackgroundColor: '#059669',
-                        pointRadius: 4
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: {
-                            backgroundColor: isDark ? '#1e293b' : '#ffffff',
-                            titleColor: isDark ? '#fff' : '#0f172a',
-                            bodyColor: isDark ? '#cbd5e1' : '#334155',
-                            borderColor: isDark ? '#334155' : '#e2e8f0',
-                            borderWidth: 1,
-                            padding: 10,
-                            callbacks: {
-                                label: function(context) {
-                                    return 'Crecimiento: ' + context.parsed.y + '%';
-                                }
-                            }
-                        }
-                    },
-                    scales: {
-                        y: {
-                            grid: { color: gridColor },
-                            ticks: { color: textColor }
-                        },
-                        x: {
-                            grid: { display: false },
-                            ticks: { color: textColor }
-                        }
-                    }
-                }
-            });
-        }
-
-        function updateChartColors() {
-            initChart();
-        }
-
-        // --- 4. SCROLL ANIMATION OBSERVER ---
-        const observerOptions = {
-            threshold: 0.2,
-            rootMargin: "0px"
-        };
-
-        const observer = new IntersectionObserver((entries) => {
+        const revealCallback = (entries, observer) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
+                    entry.target.classList.add("active");
                 }
             });
-        }, observerOptions);
+        };
 
-        document.querySelectorAll('.timeline-item').forEach(item => {
-            observer.observe(item);
+        const observer = new IntersectionObserver(revealCallback, {
+            threshold: 0.1
         });
 
-        // --- 5. AR MOCKUP CANVAS (3D Wireframe Cube) ---
-        const canvas = document.getElementById('arCanvas');
-        const ctx = canvas.getContext('2d');
-        let angle = 0;
+        document.querySelectorAll(".reveal").forEach(el => observer.observe(el));
 
-        function resizeCanvas() {
-            const container = canvas.parentElement;
-            canvas.width = container.clientWidth;
-            canvas.height = container.clientHeight;
-        }
-        window.addEventListener('resize', resizeCanvas);
-        resizeCanvas();
-
-        // Simple 3D projection logic
-        function project(x, y, z, width, height) {
-            const scale = 300 / (300 + z);
-            const x2d = (x * scale) + width / 2;
-            const y2d = (y * scale) + height / 2;
-            return { x: x2d, y: y2d };
-        }
-
-        function drawCube() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            const w = canvas.width;
-            const h = canvas.height;
-            
-            // House/Cube vertices
-            const vertices = [
-                {x: -50, y: -50, z: -50}, {x: 50, y: -50, z: -50}, {x: 50, y: 50, z: -50}, {x: -50, y: 50, z: -50}, // Front
-                {x: -50, y: -50, z: 50}, {x: 50, y: -50, z: 50}, {x: 50, y: 50, z: 50}, {x: -50, y: 50, z: 50}, // Back
-                {x: 0, y: -80, z: 0} // Roof Top
-            ];
-
-            // Rotation math
-            const rad = angle * Math.PI / 180;
-            const cos = Math.cos(rad);
-            const sin = Math.sin(rad);
-
-            const rotatedVertices = vertices.map(v => {
-                let x = v.x * cos - v.z * sin;
-                let z = v.z * cos + v.x * sin;
-                return { x: x, y: v.y, z: z };
-            });
-
-            // Edges
-            const edges = [
-                [0,1], [1,2], [2,3], [3,0], // Front face
-                [4,5], [5,6], [6,7], [7,4], // Back face
-                [0,4], [1,5], [2,6], [3,7], // Connecting
-                [0,8], [1,8], [4,8], [5,8]  // Roof
-            ];
-
-            ctx.strokeStyle = '#059669'; // Brand Green
-            ctx.lineWidth = 2;
-
-            edges.forEach(edge => {
-                const p1 = project(rotatedVertices[edge[0]].x, rotatedVertices[edge[0]].y, rotatedVertices[edge[0]].z, w, h);
-                const p2 = project(rotatedVertices[edge[1]].x, rotatedVertices[edge[1]].y, rotatedVertices[edge[1]].z, w, h);
-                ctx.beginPath();
-                ctx.moveTo(p1.x, p1.y);
-                ctx.lineTo(p2.x, p2.y);
-                ctx.stroke();
-            });
-
-            angle += 0.5;
-            requestAnimationFrame(drawCube);
-        }
-
-        // Initialize
-        initChart();
-        drawCube();
-
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const btn = this.querySelector('button');
+            btn.innerHTML = 'Procesando Envío...';
+            setTimeout(() => {
+                btn.innerHTML = '¡Solicitud Recibida!';
+                btn.className = 'md:col-span-2 bg-green-600 text-white p-6 rounded-2xl font-black text-xl';
+            }, 1500);
+        });
     </script>
 </body>
 </html>
